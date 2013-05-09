@@ -1,0 +1,22 @@
+﻿<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>Spruce</id>
+		<version>1.0.0</version>
+		<authors>Jim Geurts</authors>
+		<projectUrl>https://github.com/jgeurts/spruce</projectUrl>
+		<licenseUrl>https://raw.github.com/jgeurts/spruce/master/LICENSE.txt</licenseUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>Opinionated set of extension methods representing a lightweight orm and migration framework for use with Dapper.</description>
+		<summary>Opinionated set of extension methods representing a lightweight orm and migration framework for use with Dapper.</summary>
+		<language>en-US</language>
+		<tags>dapper sql orm migration migrations extension crud</tags>
+		<dependencies>
+      <dependency id="Dapper" version="1.12" />
+		</dependencies>
+	</metadata>
+	<files>
+		<file src="bin\Release\Spruce.dll" target="lib\net45" />
+		<file src="bin\Release\Spruce.pdb" target="lib\net45" />
+	</files>
+</package>
