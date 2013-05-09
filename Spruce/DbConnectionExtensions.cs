@@ -420,7 +420,7 @@ namespace Spruce
 			try
 			{
 				// Dynamic trick to handle ProfiledConnection (mini profiler)
-				connection = ((dynamic)connection).InnerConnection as SqlConnection;
+				connection = ((dynamic)db).InnerConnection as SqlConnection;
 			}
 			catch (Exception)
 			{}
