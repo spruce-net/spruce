@@ -36,18 +36,15 @@ SpruceSettings.Saving += (item, e) =>
 		}
 		if (currentUser != null && currentUser.UserObject != null && currentUser.UserObject.Id != default(int))
 			userId = currentUser.UserObject.Id;
-
 		if (userId.HasValue)
 		{
 			var createdBy = entityType.GetProperty("CreatedBy");
 			if (createdBy != null && (int) createdBy.GetValue(item) == default(int))
 				createdBy.SetValue(item, userId.Value);
-
 			var modifiedBy = entityType.GetProperty("ModifiedBy");
 			if (modifiedBy != null)
 				modifiedBy.SetValue(item, userId.Value);
 		}
-
 		var createdOn = entityType.GetProperty("CreatedOn");
 		if (createdOn != null && (createdOn.GetValue(item) == null || (DateTime) createdOn.GetValue(item) == default(DateTime)))
 			createdOn.SetValue(item, DateTime.UtcNow);
@@ -81,7 +78,6 @@ SpruceSettings.SqlSchemaTypeMap[typeof(TimeSpan)] = "long";
 public class TestTable {
   [AutoIncrement]
   public int Id { get; set; }
-
   [StringLength(50)]
   public MyEnumType MyEnumProperty { get; set; }
 }
