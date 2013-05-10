@@ -7,8 +7,8 @@
 		<projectUrl>https://github.com/jgeurts/spruce</projectUrl>
 		<licenseUrl>https://raw.github.com/jgeurts/spruce/master/LICENSE.txt</licenseUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<description>Opinionated set of extension methods representing a lightweight orm and migration framework for use with Dapper.</description>
-		<summary>Opinionated set of extension methods representing a lightweight orm and migration framework for use with Dapper.</summary>
+		<description>Set of extension methods representing a lightweight orm and a migration framework, for use with Dapper.</description>
+		<summary>Set of extension methods representing a lightweight orm and a migration framework, for use with Dapper.</summary>
 		<language>en-US</language>
 		<tags>dapper sql orm migration migrations extension crud</tags>
 		<dependencies>
