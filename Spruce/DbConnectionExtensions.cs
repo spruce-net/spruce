@@ -26,7 +26,7 @@ namespace Spruce
 		/// <returns></returns>
 		public static string GetTableName<T>(this IDbConnection db)
 		{
-			return db.GetTableName(typeof(T));
+			return typeof(T).GetTableName();
 		}
 		/// <summary>
 		/// Gets the name of the sql table for the type
@@ -35,10 +35,26 @@ namespace Spruce
 		/// <param name="db"></param>
 		public static string GetTableName(this IDbConnection db, Type type)
 		{
+			return type.GetTableName();
+		}
+		/// <summary>
+		/// Gets the name of the sql table for this object type
+		/// </summary>
+		/// <param name="item">Item to get table name</param>
+		public static string GetTableName(this object item)
+		{
+			return item.GetType().GetTableName();
+		}
+		/// <summary>
+		/// Gets the name of the sql table for this type
+		/// </summary>
+		/// <param name="type">Type to get the table name</param>
+		public static string GetTableName(this Type type)
+		{
 			string name;
 			if (!TypeTableName.TryGetValue(type.TypeHandle, out name))
 			{
-				if (type.IsSubclassOf(typeof(ScriptedObject)))
+				if (type.IsSubclassOf(typeof (ScriptedObject)))
 				{
 					var scriptedObject = (ScriptedObject) Activator.CreateInstance(type);
 					name = scriptedObject.Name;
@@ -63,6 +79,7 @@ namespace Spruce
 			}
 			return name;
 		}
+
 		/// <summary>
 		/// Saves the specified item. New items will have their Id property set accordingly
 		/// </summary>
