@@ -1,7 +1,7 @@
 Spruce
 ===========
 
-Opinionated set of extension methods representing a lightweight orm and migration framework for use with Dapper.  This is a .net 4.5 designed to work with MS SQL Server 2008+.
+Opinionated set of extension methods representing a lightweight orm and migration framework for use with Dapper.  This is a .net 4.5 library designed to work with MS SQL Server 2008+.
 
 Conventions
 -----------
