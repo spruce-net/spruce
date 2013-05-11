@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Spruce")]
-[assembly: AssemblyDescription("Opinionated set of extension methods representing a lightweight orm and migration framework for use with Dapper")]
+[assembly: AssemblyDescription("Set of extension methods representing a lightweight orm and a migration framework, for use with Dapper")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Bia Creations")]
 [assembly: AssemblyProduct("Spruce")]
