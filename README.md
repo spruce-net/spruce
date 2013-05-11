@@ -1,7 +1,7 @@
 Spruce
 ===========
 
-Set of extension methods representing a lightweight orm and a migration framework, for use with Dapper.  This is a .net 4.5 library designed to work with MS SQL Server 2008+.
+Set of extension methods representing a lightweight orm and a migration framework, for use with Dapper.  This is a .net 4.5 library designed to work with MS SQL Server 2008+. This library can be installed via [nuget](https://nuget.org/packages/spruce).
 
 Conventions
 -----------
