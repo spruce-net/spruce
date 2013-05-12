@@ -37,6 +37,10 @@ namespace Spruce.Schema
 		/// </summary>
 		public bool HasForeignKey { get; set; }
 		/// <summary>
+		/// Whether the foreign key should be created when creating tables or columns
+		/// </summary>
+		public bool GenerateForeignKey { get; set; }
+		/// <summary>
 		/// Name of the foreign key for this column
 		/// </summary>
 		public string ForeignKeyName { get; set; }

@@ -6,10 +6,12 @@ namespace Spruce.Schema.Attributes
 	public class ReferencesAttribute : Attribute
 	{
 		public Type Type { get; set; }
+		public bool GenerateForeignKey { get; set; }
 
-		public ReferencesAttribute(Type type)
+		public ReferencesAttribute(Type type, bool generateForeignKey = true)
 		{
 			Type = type;
+			GenerateForeignKey = generateForeignKey;
 		}
 	}
 }

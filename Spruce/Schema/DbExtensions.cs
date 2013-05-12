@@ -113,7 +113,7 @@ namespace Spruce.Schema
 					text.AppendFormat(" DEFAULT ({0})", column.DefaultValue);
 				}
 
-				if (column.HasForeignKey)
+				if (column.HasForeignKey && column.GenerateForeignKey)
 				{
 					constraints.Append(", CONSTRAINT \"");
 					constraints.Append(column.ForeignKeyName);
@@ -325,6 +325,7 @@ IF EXISTS(select * from INFORMATION_SCHEMA.TABLES where TABLE_NAME=@OldTableName
 							column.ReferencedTableColumnName = referencedColumn == null ? "Id" : referencedColumn.Name;
 						}
 						column.ForeignKeyName = GetForeignKeyName(tableName, property.Name, column.ReferencedTableName);
+						column.GenerateForeignKey = referencesAttribute.GenerateForeignKey;
 					}
 
 					columns.Add(column);
@@ -370,7 +371,7 @@ IF EXISTS(select * from INFORMATION_SCHEMA.TABLES where TABLE_NAME=@OldTableName
 				sql += " NOT NULL CONSTRAINT DF_{0}_{1} DEFAULT {2}".Fmt(table, column.Name, (column.Type == typeof(string)) ? "N'{0}'".Fmt(defaultValue) : defaultValue);
 			}
 
-			if (column.HasForeignKey)
+			if (column.HasForeignKey && column.GenerateForeignKey)
 			{
 				sql += ";ALTER TABLE [{0}] ADD CONSTRAINT [{1}] FOREIGN KEY ([{2}]) REFERENCES [{3}] ([{4}]) ON UPDATE  NO ACTION ON DELETE  NO ACTION ".Fmt(
 					table,
