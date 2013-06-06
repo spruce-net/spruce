@@ -69,6 +69,16 @@ SpruceSettings.SqlSchemaTypeMap[typeof(TimeSpan)] = "long";
 ```
 > Please keep in mind that this only affects schema information. You may need to adjust Dapper's type mapping for querying.
 
+> You may also explicitly set the sql type on a per field basis. For example:
+```csharp
+public class TestTable {
+  [AutoIncrement]
+  public int Id { get; set; }
+  [SqlType("decimal(9,6)")]
+  public public decimal Latitude { get; set; }
+  [SqlType("decimal(9,6)")]
+  public public decimal Longitude { get; set; }
+}
 
 ### I would like my enum to map to an nvarchar field instead of an int. How do I do this?
 
