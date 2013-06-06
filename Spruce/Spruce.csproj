@@ -51,6 +51,7 @@
     <Compile Include="Migrations\DataMigration.cs" />
     <Compile Include="Migrations\IMigration.cs" />
     <Compile Include="Schema\Attributes\AutoIncrementAttribute.cs" />
+    <Compile Include="Schema\Attributes\SqlTypeAttribute.cs" />
     <Compile Include="Schema\Attributes\DefaultAttribute.cs" />
     <Compile Include="Schema\Attributes\IgnoreAttribute.cs" />
     <Compile Include="Schema\Attributes\PrimaryKeyAttribute.cs" />

@@ -284,7 +284,7 @@ IF EXISTS(select * from INFORMATION_SCHEMA.TABLES where TABLE_NAME=@OldTableName
 					var propertyType = isNullableType
 						? Nullable.GetUnderlyingType(property.PropertyType)
 						: property.PropertyType;
-					var sqlType = GetSqlType(propertyType, property.FirstAttribute<StringLengthAttribute>(true));
+					var sqlType = GetSqlType(propertyType, property);
 					var autoIncrement = isPrimary && property.FirstAttribute<AutoIncrementAttribute>() != null;
 					var defaultValueAttribute = property.FirstAttribute<DefaultAttribute>();
 					var defaultValue = defaultValueAttribute != null ? defaultValueAttribute.DefaultValue : null;
@@ -644,9 +644,17 @@ PRINT 'All done'");
 			return "FK_{0}_{1}__{2}".Fmt(tableName, columnName, referencedTableName);
 		}
 
-		private static string GetSqlType(Type type, StringLengthAttribute stringLengthAttribute)
+		private static string GetSqlType(Type type, PropertyInfo property)
 		{
-			// Override any field type to map to an nvarchar field, if StringLength attribute is applied to the property
+			// First check to see if SqlType attribute is applied. If so, go with that
+			var sqlTypeAttribute = property.FirstAttribute<SqlTypeAttribute>(true);
+			if (sqlTypeAttribute != null)
+			{
+				return sqlTypeAttribute.Type;
+			}
+
+			// Override any field type to map to an nvarchar field if StringLength attribute is applied to the property
+			var stringLengthAttribute = property.FirstAttribute<StringLengthAttribute>(true);
 			if (stringLengthAttribute != null)
 			{
 				return SpruceSettings.SqlSchemaTypeMap[typeof(string)].Fmt(stringLengthAttribute.MaximumLength);
