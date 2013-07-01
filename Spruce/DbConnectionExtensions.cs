@@ -451,7 +451,7 @@ namespace Spruce
 				var columns = db.GetColumns<T>();
 				foreach (var item in items)
 				{
-					if (count == 0)
+					if (dt == null)
 					{
 						dt = new DataTable(bulkInsert.DestinationTableName);
 						foreach (var column in columns)
