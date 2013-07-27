@@ -69,6 +69,7 @@ namespace Spruce
 						name = pluralizer.Pluralize(type.Name);
 						if (type.IsInterface && name.StartsWith("I"))
 							name = name.Substring(1);
+						name = SpruceSettings.DbPrefix + name;
 					}
 					else
 					{

@@ -42,5 +42,10 @@ namespace Spruce
 		/// Default nvarchar length to use when a type is not defined in the <see cref="SqlSchemaTypeMap"/>. Set to null to use nvarchar(max)
 		/// </summary>
 		public static int? UndefinedFieldTypeStringLength = 50;
+
+		/// <summary>
+		/// Set the prefix for table names
+		/// </summary>
+		public static string DbPrefix = "";
     }
 }
