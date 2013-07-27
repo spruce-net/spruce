@@ -74,6 +74,9 @@ namespace Spruce.Schema
 
 			var text = new StringBuilder();
 			var constraints = new StringBuilder();
+			text.Append("IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[");
+			text.Append(tableName);
+			text.AppendLine("]') AND type in (N'U')) BEGIN");
 			text.Append("CREATE TABLE [");
 			text.Append(tableName);
 			text.AppendLine("] (");
@@ -128,6 +131,7 @@ namespace Spruce.Schema
 				text.Append(constraints);
 
 			text.AppendLine(");");
+			text.AppendLine("END;");
 
 			db.Execute(text.ToString());
 		}
