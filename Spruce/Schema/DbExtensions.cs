@@ -292,6 +292,8 @@ IF EXISTS(select * from INFORMATION_SCHEMA.TABLES where TABLE_NAME=@OldTableName
 					var autoIncrement = isPrimary && property.FirstAttribute<AutoIncrementAttribute>() != null;
 					var defaultValueAttribute = property.FirstAttribute<DefaultAttribute>();
 					var defaultValue = defaultValueAttribute != null ? defaultValueAttribute.DefaultValue : null;
+					//NOTE: This as dynamic trick should be able to handle column attributes from different places
+					var columnAttr = property.GetCustomAttributes(false).SingleOrDefault(attr => attr.GetType().Name == "ColumnAttribute") as dynamic;
 
 					var closureProperty = property;
 					var column = new Column
@@ -299,7 +301,7 @@ IF EXISTS(select * from INFORMATION_SCHEMA.TABLES where TABLE_NAME=@OldTableName
 							IsPrimary = isPrimary,
 							IsNullable = isNullable,
 							Type = propertyType,
-							Name = property.Name,
+							Name = columnAttr == null ? property.Name : columnAttr.Name,
 							SqlType = sqlType,
 							AutoIncrement = autoIncrement,
 							DefaultValue = defaultValue,
