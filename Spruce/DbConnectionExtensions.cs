@@ -358,7 +358,7 @@ namespace Spruce
 			var tableName = db.GetTableName<T>();
 
             var startRow = ((page - 1) * pageSize) + 1;
-            var maxRow = (long)startRow + pageSize;
+            var maxRow = page * pageSize;
 			var sql = new StringBuilder();
 			sql.Append(@"select * from (select *, ROW_NUMBER() OVER (order by ");
 			if (string.IsNullOrEmpty(orderBy))
