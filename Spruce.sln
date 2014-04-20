@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{65C44D
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spruce.Tests", "Spruce.Tests\Spruce.Tests.csproj", "{F81682A9-B0C3-4FA6-AA13-92126EA1E795}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,10 @@ Global
 		{D4C5F95B-FE11-4B0D-A386-EC9497BD20B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4C5F95B-FE11-4B0D-A386-EC9497BD20B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4C5F95B-FE11-4B0D-A386-EC9497BD20B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F81682A9-B0C3-4FA6-AA13-92126EA1E795}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F81682A9-B0C3-4FA6-AA13-92126EA1E795}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F81682A9-B0C3-4FA6-AA13-92126EA1E795}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F81682A9-B0C3-4FA6-AA13-92126EA1E795}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
