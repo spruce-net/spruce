@@ -302,6 +302,7 @@ IF EXISTS(select * from INFORMATION_SCHEMA.TABLES where TABLE_NAME=@OldTableName
 							IsNullable = isNullable,
 							Type = propertyType,
 							Name = columnAttr == null ? property.Name : columnAttr.Name,
+							PropertyName = property.Name,
 							SqlType = sqlType,
 							AutoIncrement = autoIncrement,
 							DefaultValue = defaultValue,
@@ -703,6 +704,41 @@ PRINT 'All done'");
 				throw new ArgumentException("method");
 
 			return memberExpr;
+		}
+
+		private static readonly ConcurrentDictionary<RuntimeTypeHandle, bool> TypeExplicitColumns = new ConcurrentDictionary<RuntimeTypeHandle, bool>();
+		/// <summary>
+		/// Determines if the object should use explicit column names for queries
+		/// </summary>
+		/// <typeparam name="T">Class type</typeparam>
+		/// <param name="db"></param>
+		/// <returns></returns>
+		internal static bool ShouldQueryExplicitColumns<T>(this IDbConnection db)
+		{
+			return db.ShouldQueryExplicitColumns(typeof(T));
+		}
+		/// <summary>
+		/// Determines if the object should use explicit column names for queries
+		/// </summary>
+		/// <param name="type">Class type</param>
+		/// <param name="db"></param>
+		internal static bool ShouldQueryExplicitColumns(this IDbConnection db, Type type)
+		{
+			return ShouldQueryExplicitColumns(type);
+		}
+		/// <summary>
+		/// Determines if the object should use explicit column names for queries
+		/// </summary>
+		/// <param name="type">Class type</param>
+		private static bool ShouldQueryExplicitColumns(Type type)
+		{
+			var result = false;;
+			if (!TypeExplicitColumns.TryGetValue(type.TypeHandle, out result))
+			{
+				var attribute = type.GetCustomAttributes(false).SingleOrDefault(attr => attr.GetType().Name == "QueryExplicitColumnsAttribute") as dynamic;
+				result = TypeExplicitColumns[type.TypeHandle] = attribute != null;
+			}
+			return result;
 		}
 	}
 }

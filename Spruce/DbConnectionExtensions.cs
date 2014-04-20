@@ -140,7 +140,7 @@ namespace Spruce
 			for (var i = 0; i < columns.Count; i++)
 			{
 				var column = columns.ElementAt(i);
-				sql.AppendFormat("@{0}", column.Name);
+				sql.AppendFormat("@{0}", column.PropertyName);
 				if (i != columns.Count - 1)
 				{
 					sql.Append(",");
@@ -176,13 +176,14 @@ namespace Spruce
 			for (var i = 0; i < columnsWithoutPrimary.Count; i++)
 			{
 				var column = columnsWithoutPrimary.ElementAt(i);
-				sql.AppendFormat("[{0}]=@{0}", column.Name);
+				sql.AppendFormat("[{0}]=@{1}", column.Name, column.PropertyName);
 				if (i != columnsWithoutPrimary.Count - 1)
 				{
 					sql.Append(",");
 				}
 			}
-			sql.AppendFormat(" where [{0}]=@{0}", columns.First(x => x.IsPrimary).Name);
+			var primaryColumn = columns.First(x => x.IsPrimary);
+			sql.AppendFormat(" where [{0}]=@{1}", primaryColumn.Name, primaryColumn.PropertyName);
 			db.Execute(sql.ToString(), item, transaction);
 		}
 
@@ -217,7 +218,7 @@ namespace Spruce
 				throw new Exception("Please use db.Execute() instead");
 
 			var sql = "delete from [{0}]".Fmt(db.GetTableName<T>());
-			sql += BuildWhereClauseFromAnonymousObject(where);
+			sql += BuildWhereClauseFromAnonymousObject<T>(db, where);
 
 			return db.Execute(sql, where, transaction);
 		}
@@ -274,8 +275,11 @@ namespace Spruce
 		{
 			if (where is string)
 				throw new Exception("Please use db.Query<T>() instead");
-			var sql = "select top 1 * from [{0}]".Fmt(db.GetTableName<T>());
-			sql += BuildWhereClauseFromAnonymousObject(where);
+			var sql = "select top 1 ";
+
+			sql += BuildColumnSelectStatement<T>(db);
+			sql += " from [{0}]".Fmt(db.GetTableName<T>());
+			sql += BuildWhereClauseFromAnonymousObject<T>(db, where);
 			return db.Query<T>(sql, where, transaction).SingleOrDefault();
 		}
 		/// <summary>
@@ -302,18 +306,57 @@ namespace Spruce
 			}
 			return names;
 		}
-		private static string BuildWhereClauseFromAnonymousObject(object where)
+		private static string BuildColumnSelectStatement<T>(IDbConnection db)
+		{
+			var sql = string.Empty;
+			var useExplicit = db.ShouldQueryExplicitColumns<T>();
+			var columns = db.GetColumns<T>();
+			if (useExplicit || columns.Any(x => x.Name.Equals(x.PropertyName, StringComparison.OrdinalIgnoreCase)))
+			{
+				// The mapping has explicit column names specified
+				for (var i = 0; i < columns.Count; i++)
+				{
+					var column = columns.ElementAt(i);
+					if (i > 0)
+						sql += ",";
+					if (column.Name.Equals(column.PropertyName, StringComparison.OrdinalIgnoreCase))
+					{
+						sql += "[{0}]".Fmt(column.Name);
+					}
+					else
+					{
+						sql += "[{0}] as '{1}'".Fmt(column.Name, column.PropertyName);
+					}
+				}
+			}
+			else
+			{
+				sql += "*";
+			}
+			return sql;
+		}
+		private static string BuildWhereClauseFromAnonymousObject<T>(IDbConnection db, object where)
 		{
 			var properties = GetPropertyNamesByType(where.GetType());
+			var columns = db.GetColumns<T>();
 
 			var sql = new StringBuilder();
 			var isFirst = true;
 			foreach (var property in properties)
 			{
+				var column = columns.FirstOrDefault(x => x.PropertyName.Equals(property, StringComparison.OrdinalIgnoreCase));
+
 				if (!isFirst)
 					sql.Append(" and ");
 				sql.Append("[");
-				sql.Append(property);
+				if (column == null)
+				{
+					sql.Append(property);
+				}
+				else
+				{
+					sql.Append(column.Name);
+				}
 				sql.Append("]=");
 				sql.Append("@");
 				sql.Append(property);
@@ -338,8 +381,10 @@ namespace Spruce
 		{
 			if (where is string)
 				throw new Exception("Please use db.Query<T>() instead");
-			var sql = "select * from [{0}]".Fmt(db.GetTableName<T>());
-			sql += BuildWhereClauseFromAnonymousObject(where);
+			var sql = "select ";
+			sql += BuildColumnSelectStatement<T>(db);
+			sql += " from [{0}]".Fmt(db.GetTableName<T>());
+			sql += BuildWhereClauseFromAnonymousObject<T>(db, where);
 			return db.Query<T>(sql, where, transaction).ToList();
 		}
 
@@ -360,7 +405,9 @@ namespace Spruce
             var startRow = ((page - 1) * pageSize) + 1;
             var maxRow = page * pageSize;
 			var sql = new StringBuilder();
-			sql.Append(@"select * from (select *, ROW_NUMBER() OVER (order by ");
+			sql.Append("select * from (select ");
+			sql.Append(BuildColumnSelectStatement<T>(db));
+			sql.Append(", ROW_NUMBER() OVER (order by ");
 			if (string.IsNullOrEmpty(orderBy))
 			{
 				var columns = db.GetColumns<T>();

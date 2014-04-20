@@ -9,6 +9,10 @@ namespace Spruce.Schema
 		/// </summary>
 		public string Name { get; set; }
 		/// <summary>
+		/// Name of the property from the associated class
+		/// </summary>
+		public string PropertyName { get; set; }
+		/// <summary>
 		/// If the column is the primary key
 		/// </summary>
 		public bool IsPrimary { get; set; }
