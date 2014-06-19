@@ -94,7 +94,7 @@ namespace Spruce
 		{
 			SpruceSettings.OnSaving(item);
 
-			var type = item.GetType();
+			var type = typeof(T);
 			var columns = db.GetColumns(type);
 			var primary = columns.SingleOrDefault(x => x.IsPrimary);
 			if (primary == null)
@@ -197,7 +197,7 @@ namespace Spruce
 		/// <returns></returns>
 		public static int Delete<T>(this IDbConnection db, T item, IDbTransaction transaction = null) where T : class
 		{
-			var type = item.GetType();
+			var type = typeof(T);
 			var columns = db.GetColumns(type);
 			var primary = columns.SingleOrDefault(x => x.IsPrimary);
 			if (primary == null)

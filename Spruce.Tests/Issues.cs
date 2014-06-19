@@ -78,5 +78,36 @@ namespace Spruce.Tests
 				timing.CommandString.Should().Not.Contain(string.Format("select top 1 * from [{0}]", Db.GetTableName<ClassWithQueryExplicit>()));
 			}
 		}
+
+		[Table("ClassWithColumnNames")]
+		private class InheritedClassWithColumnName : ClassWithColumnName
+		{
+			public ClassWithQueryExplicit AnotherClass { get; set; }
+		}
+
+		[Test]
+		public void GetColumnsUsingPassedObjectTypeInsteadOfUnderlyingObjectType()
+		{
+			var originalItem = new ClassWithColumnName
+				{
+					NewName = "Funk"
+				};
+			Db.Save(originalItem);
+
+			var item = new InheritedClassWithColumnName
+				{
+					Id = originalItem.Id,
+					NewName = "Dr",
+					AnotherClass = new ClassWithQueryExplicit
+					{
+						NewName = "asdf"
+					}
+				};
+			Db.Save((ClassWithColumnName)item);
+
+			var updatedItem = Db.SingleOrDefault<ClassWithColumnName>(new { originalItem.Id });
+			updatedItem.Should().Not.Be.Null();
+			updatedItem.NewName.Should().Equal(item.NewName);
+		}
 	}
 }
