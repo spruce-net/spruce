@@ -14,6 +14,8 @@
 		<dependencies>
       <dependency id="Dapper" version="1.12" />
 		</dependencies>
+		<releaseNotes>v1.1.14 Changes:
+* Added ScriptedObjectsToRecreate to IMigration</releaseNotes>
 	</metadata>
 	<files>
 		<file src="bin\Release\Spruce.dll" target="lib\net45" />
