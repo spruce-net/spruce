@@ -578,6 +578,21 @@ COMMIT TRANSACTION;".Fmt(table, columnName);
 			db.Execute(item.DeleteScript);
 			db.Execute(item.CreateScript);
 		}
+
+		/// <summary>
+		/// Recreate the <see cref="ScriptedObject"/> specified by the type parameter.
+		/// </summary>
+		/// <param name="type">Type of <see cref="ScriptedObject"/> (view, sproc, user defined function) to recreate</param>
+		/// <param name="db">Current db connection</param>
+		public static void RecreateScriptedObject(this IDbConnection db, Type type)
+		{
+			var item = Activator.CreateInstance(type) as ScriptedObject;
+			if (item == null)
+				throw new Exception("Unable to convert type to ScriptedObject: " + type);
+			db.Execute(item.DeleteScript);
+			db.Execute(item.CreateScript);
+		}
+
 		/// <summary>
 		/// Drops all scripted objects (sprocs, views, functions)
 		/// </summary>
