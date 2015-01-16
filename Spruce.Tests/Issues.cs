@@ -109,5 +109,26 @@ namespace Spruce.Tests
 			updatedItem.Should().Not.Be.Null();
 			updatedItem.NewName.Should().Equal(item.NewName);
 		}
+
+		[Test]
+		public void PagedListWithEmptyWhereDoesNotApplyWhereClause()
+		{
+			var testItem = new ClassWithColumnName {NewName = "PagedListWithEmptyWhere"};
+			Db.Save(testItem);
+
+			var result = Db.PagedList<ClassWithColumnName>(1, 1, "");
+			result.Should().Not.Be.Null();
+			result.Should().Not.Be.Empty();
+		}
+		[Test]
+		public void PagedListWithNullWhereDoesNotApplyWhereClause()
+		{
+			var testItem = new ClassWithColumnName {NewName = "PagedListWithEmptyWhere"};
+			Db.Save(testItem);
+
+			var result = Db.PagedList<ClassWithColumnName>(1, 1, null);
+			result.Should().Not.Be.Null();
+			result.Should().Not.Be.Empty();
+		}
 	}
 }
