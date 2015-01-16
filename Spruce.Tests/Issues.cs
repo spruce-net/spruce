@@ -123,7 +123,7 @@ namespace Spruce.Tests
 		[Test]
 		public void PagedListWithNullWhereDoesNotApplyWhereClause()
 		{
-			var testItem = new ClassWithColumnName {NewName = "PagedListWithEmptyWhere"};
+			var testItem = new ClassWithColumnName {NewName = "PagedListWithNullWhere"};
 			Db.Save(testItem);
 
 			var result = Db.PagedList<ClassWithColumnName>(1, 1, null);
