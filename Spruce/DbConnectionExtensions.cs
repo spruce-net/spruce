@@ -496,7 +496,7 @@ namespace Spruce
 				bulkInsert.DestinationTableName = db.GetTableName<T>();
 				var count = 0;
 				DataTable dt = null;
-				var columns = db.GetColumns<T>();
+				var columns = db.GetColumns<T>().Where(x => !x.IsPrimary);
 				foreach (var item in items)
 				{
 					if (dt == null)
