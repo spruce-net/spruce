@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using NUnit.Framework;
 using Should.Fluent;
 using Spruce.Schema;
@@ -16,6 +17,7 @@ namespace Spruce.Tests
 
 			Db.CreateTable<ClassWithColumnName>();
 			Db.CreateTable<ClassWithQueryExplicit>();
+			Db.CreateTable<ClassWithGuidId>();
 		}
 
 		private class ClassWithColumnName
@@ -24,6 +26,13 @@ namespace Spruce.Tests
 			public int Id { get; set; }
 			[Column("OldName")]
 			public string NewName { get; set; }
+		}
+		private class ClassWithGuidId
+		{
+			[PrimaryKey]
+			[Default("newSequentialId()")]
+			public Guid Id { get; set; }
+			public string Name { get; set; }
 		}
 
 		[Test]
@@ -108,6 +117,44 @@ namespace Spruce.Tests
 			var updatedItem = Db.SingleOrDefault<ClassWithColumnName>(new { originalItem.Id });
 			updatedItem.Should().Not.Be.Null();
 			updatedItem.NewName.Should().Equal(item.NewName);
+		}
+
+		[Test]
+		public void PagedListWithEmptyWhereDoesNotApplyWhereClause()
+		{
+			var testItem = new ClassWithColumnName {NewName = "PagedListWithEmptyWhere"};
+			Db.Save(testItem);
+
+			var result = Db.PagedList<ClassWithColumnName>(1, 1, "");
+			result.Should().Not.Be.Null();
+			result.Should().Not.Be.Empty();
+		}
+		[Test]
+		public void PagedListWithNullWhereDoesNotApplyWhereClause()
+		{
+			var testItem = new ClassWithColumnName {NewName = "PagedListWithNullWhere"};
+			Db.Save(testItem);
+
+			var result = Db.PagedList<ClassWithColumnName>(1, 1, null);
+			result.Should().Not.Be.Null();
+			result.Should().Not.Be.Empty();
+		}
+
+		[Test]
+		public void BulkInsertWithNewSequentialIdSetsIdToNewGuid()
+		{
+			var item1 = new ClassWithGuidId {Name = "ClassWithGuidId1"};
+			var item2 = new ClassWithGuidId {Name = "ClassWithGuidId2"};
+
+			var result = Db.BulkInsert(new[] {item1, item2});
+			result.Should().Equal(2);
+
+			var dbItem1 = Db.Query<ClassWithGuidId>(new {item1.Name});
+			dbItem1.Should().Not.Be.Empty();
+			dbItem1.FirstOrDefault().Id.Should().Not.Equal(Guid.Empty);
+			var dbItem2 = Db.Query<ClassWithGuidId>(new {item2.Name});
+			dbItem2.Should().Not.Be.Empty();
+			dbItem2.FirstOrDefault().Id.Should().Not.Equal(Guid.Empty);
 		}
 	}
 }
