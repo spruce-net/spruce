@@ -1,8 +1,3 @@
-# Seeking New Ownership!
-
-This project is no longer actively being maintained.  If you are interested in taking over as an owner, please [inquire within](https://github.com/jgeurts/spruce/issues/7)
-
-
 Spruce
 ===========
 
